@@ -1,0 +1,10 @@
+c:\users\donahoeke\source\repos\Test\Test\bin\Debug\Test.exe.config
+c:\users\donahoeke\source\repos\Test\Test\bin\Debug\Test.exe
+c:\users\donahoeke\source\repos\Test\Test\bin\Debug\Test.pdb
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.csprojAssemblyReference.cache
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.Form1.resources
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.Properties.Resources.resources
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.csproj.GenerateResource.cache
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.exe
+c:\users\donahoeke\source\repos\Test\Test\obj\Debug\Test.pdb
