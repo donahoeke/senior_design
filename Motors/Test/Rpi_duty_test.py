@@ -2,14 +2,14 @@ import RPi.GPIO as io
 io.setmode(io.BCM) #The GPIO.BCM option means that you are referring to the pins by the "Broadcom SOC channel" number (see diagram 1 - they are the green GPIO pins)
  
 #Configures GPIO Pin 4 as an output
-o_pin = 4
+o_pin = 7
 io.setup(o_pin, io.OUT)
 
 #Function to set the different files with the right properties
 #STOLEN from online
 def set(property, value):
     try:
-        f = open("/sys/class/rpi-pwm/pwm0/" + property, 'w')
+        f = open("/sys/class/pwm/pwmchip0/" + property, 'w')
         f.write(value)
         f.close()   
     except:
