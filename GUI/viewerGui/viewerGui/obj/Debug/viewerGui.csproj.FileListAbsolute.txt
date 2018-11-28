@@ -1,0 +1,10 @@
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\bin\Debug\viewerGui.exe.config
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\bin\Debug\viewerGui.exe
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\bin\Debug\viewerGui.pdb
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.csprojAssemblyReference.cache
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.Form1.resources
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.Properties.Resources.resources
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.csproj.GenerateResource.cache
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.csproj.CoreCompileInputs.cache
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.exe
+C:\Users\donahoeke\source\repos\viewerGui\viewerGui\obj\Debug\viewerGui.pdb
