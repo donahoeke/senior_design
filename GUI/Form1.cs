@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,69 +22,165 @@ namespace viewerGui
         AForge.Imaging.Filters.Invert invFilter = new AForge.Imaging.Filters.Invert();
         AForge.Imaging.Filters.BrightnessCorrection brtCorrection = new AForge.Imaging.Filters.BrightnessCorrection(-50);
         AForge.Imaging.Filters.BrightnessCorrection brtCorrection2 = new AForge.Imaging.Filters.BrightnessCorrection(-50);
-    
+
         AForge.Imaging.Filters.ContrastCorrection contrastCorrection = new AForge.Imaging.Filters.ContrastCorrection(15);
         AForge.Imaging.Filters.SaturationCorrection satCorrection = new AForge.Imaging.Filters.SaturationCorrection(1);
-        AForge.Imaging.Filters.GaussianBlur blurFilter = new AForge.Imaging.Filters.GaussianBlur(4,11);
-        AForge.Imaging.Filters.GaussianSharpen sharpFilter = new AForge.Imaging.Filters.GaussianSharpen(4,11);
+        AForge.Imaging.Filters.GaussianBlur blurFilter = new AForge.Imaging.Filters.GaussianBlur(4, 11);
+        AForge.Imaging.Filters.GaussianSharpen sharpFilter = new AForge.Imaging.Filters.GaussianSharpen(4, 11);
         AForge.Imaging.Filters.Blur quickBlurFilter = new AForge.Imaging.Filters.Blur();
         AForge.Imaging.Filters.Sharpen quickSharpFilter = new AForge.Imaging.Filters.Sharpen();
-
-
+        AForge.Imaging.Filters.Difference diffFilter = new AForge.Imaging.Filters.Difference(origLeftimage);
+        
+        
         //AForge.Video.FFMPEG.VideoFileReader reader = new AForge.Video.FFMPEG.VideoFileReader();
         static Bitmap origRightImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
         static Bitmap origLeftimage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left.bmp");
         Bitmap filtered_left = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left.bmp");
         Bitmap filtered_right = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        
+        Bitmap left_stats = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left.bmp");
+        Bitmap right_stats = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
+        Bitmap resultImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
+
         AForge.Imaging.ImageStatistics leftStats = new AForge.Imaging.ImageStatistics(origLeftimage);
         AForge.Imaging.ImageStatistics rightStats = new AForge.Imaging.ImageStatistics(origRightImage);
-        
-        
+        AForge.Imaging.VerticalIntensityStatistics leftVis = new AForge.Imaging.VerticalIntensityStatistics(origLeftimage);
+        AForge.Imaging.VerticalIntensityStatistics rightVis = new AForge.Imaging.VerticalIntensityStatistics(origRightImage);
+        AForge.Imaging.HorizontalIntensityStatistics leftHor = new AForge.Imaging.HorizontalIntensityStatistics(origLeftimage);
+        AForge.Imaging.HorizontalIntensityStatistics rightHor = new AForge.Imaging.HorizontalIntensityStatistics(origRightImage);
+
+
         public Form1()
         {
-           InitializeComponent();
+            InitializeComponent();
             left_pictureBox.Image = origLeftimage;
             right_pictureBox.Image = origRightImage;
             apply3D(origLeftimage, origRightImage, "color");
-            color_radioButton.Checked = true;
+
+
+
+            statistics(origLeftimage,origRightImage);
+            displayDiff(origLeftimage, origRightImage);
+           // this.WindowState = FormWindowState.Maximized;
         }
 
-
-        private void color_radioButton_CheckedChanged(object sender, EventArgs e)
+        private void displayDiff(Bitmap leftImage, Bitmap rightImage)
         {
-            apply3D(origLeftimage,origRightImage, "color");
+            diffFilter = new AForge.Imaging.Filters.Difference(leftImage);
+            Bitmap resultImage = diffFilter.Apply(rightImage);
+            pictureBox2.Image = resultImage;
         }
-
-        private void true_radioButton_CheckedChanged(object sender, EventArgs e)
+        private void statistics(Bitmap leftImage, Bitmap rightImage)
         {
-            apply3D(origLeftimage, origRightImage, "true");
+            try
+            {
+                leftStats = new AForge.Imaging.ImageStatistics(leftImage);
+                rightStats = new AForge.Imaging.ImageStatistics(rightImage);
+                leftVis = new AForge.Imaging.VerticalIntensityStatistics(origLeftimage);
+                rightVis = new AForge.Imaging.VerticalIntensityStatistics(origRightImage);
+                leftHor = new AForge.Imaging.HorizontalIntensityStatistics(origLeftimage);
+                rightHor = new AForge.Imaging.HorizontalIntensityStatistics(origRightImage);
+
+                //leftVis.
+                AForge.Math.Histogram histogram_rl = leftStats.Red;
+                AForge.Math.Histogram histogram_gl = leftStats.Green;
+                AForge.Math.Histogram histogram_bl = leftStats.Blue;
+                AForge.Math.Histogram histogram_rr = leftStats.Red;
+                AForge.Math.Histogram histogram_gr = leftStats.Green;
+                AForge.Math.Histogram histogram_br = leftStats.Blue;
+
+                rl_mean_textBox.Text = histogram_rl.Mean.ToString();
+                rl_median_textBox.Text = histogram_rl.Median.ToString();
+                rl_std_textBox.Text = histogram_rl.StdDev.ToString();
+
+                gl_mean_textBox.Text = histogram_gl.Mean.ToString();
+                gl_median_textBox.Text = histogram_gl.Median.ToString();
+                gl_std_textBox.Text = histogram_gl.StdDev.ToString();
+
+                bl_mean_textBox.Text = histogram_bl.Mean.ToString();
+                bl_median_textBox.Text = histogram_bl.Median.ToString();
+                bl_std_textBox.Text = histogram_bl.StdDev.ToString();
+
+                rr_mean_textBox.Text = histogram_rr.Mean.ToString();
+                rr_median_textBox.Text = histogram_rr.Median.ToString();
+                rr_std_textBox.Text = histogram_rr.StdDev.ToString();
+
+                gr_mean_textBox.Text = histogram_gr.Mean.ToString();
+                gr_median_textBox.Text = histogram_gr.Median.ToString();
+                gr_std_textBox.Text = histogram_gr.StdDev.ToString();
+
+                br_mean_textBox.Text = histogram_br.Mean.ToString();
+                br_median_textBox.Text = histogram_br.Median.ToString();
+                br_std_textBox.Text = histogram_br.StdDev.ToString();
+
+                int histHeight = 128;
+                Bitmap left_img = new Bitmap(275 * 2 + 20 + 256, histHeight );
+
+                using (Graphics g = Graphics.FromImage(left_img))
+                {
+                    for (int i = 1; i < 256; i++)
+                    {
+                        float pct_r = histogram_rl.Values[i] / histogram_rl.Max;   // What percentage of the max is this value?
+                        float pct_g = histogram_gl.Values[i] / histogram_gl.Max;
+                        float pct_b = histogram_bl.Values[i] / histogram_bl.Max;
+                        g.DrawLine(Pens.Red,
+                            new Point(i, left_img.Height - 5),
+                            new Point(i, left_img.Height - 5 - (int)(pct_r * histHeight))  // Use that percentage of the height
+                            );
+                        g.DrawLine(Pens.Green,
+                            new Point(i + 275, left_img.Height - 5),
+                            new Point(i + 275, left_img.Height - 5 - (int)(pct_g * histHeight))  // Use that percentage of the height
+                            );
+                        g.DrawLine(Pens.Blue,
+                            new Point(i + 275 * 2, left_img.Height - 5),
+                            new Point(i + 275 * 2, left_img.Height - 5 - (int)(pct_b * histHeight))  // Use that percentage of the height
+                             );                        
+                    }
+            
+                }
+                Bitmap right_img = new Bitmap(275*2+20+256, histHeight );
+
+                using (Graphics g = Graphics.FromImage(right_img))
+                {
+                    for (int i = 1; i < 256; i++)
+                    {
+                        float pct_r = histogram_rr.Values[i] / histogram_rr.Max;   // What percentage of the max is this value?
+                        float pct_g = histogram_gr.Values[i] / histogram_gr.Max;
+                        float pct_b = histogram_br.Values[i] / histogram_br.Max;
+                        g.DrawLine(Pens.Red,
+                            new Point(i, right_img.Height - 5),
+                            new Point(i, right_img.Height - 5 - (int)(pct_r * histHeight))  // Use that percentage of the height
+                            );
+                        g.DrawLine(Pens.Green,
+                            new Point(i + 275, right_img.Height - 5),
+                            new Point(i + 275, right_img.Height - 5 - (int)(pct_g * histHeight))  // Use that percentage of the height
+                            );
+                        g.DrawLine(Pens.Blue,
+                            new Point(i + 275 * 2, right_img.Height - 5),
+                            new Point(i + 275 * 2, right_img.Height - 5 - (int)(pct_b * histHeight))  // Use that percentage of the height
+                             );
+                    }
+                }
+
+                leftStats_pictureBox.Image = left_img;
+                rightStats_pictureBox.Image = right_img;
+            }
+            catch(Exception ex)
+            {
+
+            }
         }
 
-        private void grey_RadioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            apply3D(origLeftimage, origRightImage, "grey");
-        }
+      
 
-        private void half_radioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            apply3D(origLeftimage, origRightImage, "half");
-        }
-
-        private void optimized_radioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            apply3D(origLeftimage, origRightImage, "opt");
-        }
-
-        /*
-         * apply3D
-         * purpose: displays a specified anaglyph image to the user interface given two stereo input images
-         * inputs:
-         *  Bitmap origLeftimage: left stereo image to be applied to the filter
-         *  Bitmap origRightImage: right stereo image; considered the overlay image of the filter
-         *  string anaglyph_type: specifies 1 of 5 different anaglyph output types
-         */
-        private void apply3D(Bitmap origLeftimage, Bitmap origRightImage, string anaglyph_type)
+    /*
+     * apply3D
+     * purpose: displays a specified anaglyph image to the user interface given two stereo input images
+     * inputs:
+     *  Bitmap origLeftimage: left stereo image to be applied to the filter
+     *  Bitmap origRightImage: right stereo image; considered the overlay image of the filter
+     *  string anaglyph_type: specifies 1 of 5 different anaglyph output types
+     */
+    private void apply3D(Bitmap leftImage, Bitmap rightImage, string anaglyph_type)
         {
 
             string caseSwitch = anaglyph_type;
@@ -110,18 +206,25 @@ namespace viewerGui
                     filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.ColorAnaglyph;
                     break;
             }
-                  
-            filter.OverlayImage = origRightImage;
-            Bitmap resultImage = filter.Apply(origLeftimage);
-            threeD_pictureBox.Image = resultImage;
+
+            try
+            {
+                filter.OverlayImage = leftImage;
+                resultImage = filter.Apply(rightImage);
+                threeD_pictureBox.Image = resultImage;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
 
         private void greyscale_radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if(greyscale_radioButton.Checked)
+            if (greyscale_radioButton.Checked)
             {
-                applyGreyscaleFilter(origLeftimage,origRightImage);
+                applyGreyscaleFilter(origLeftimage, origRightImage);
                 if (brightness_trackBar.Value != 50)
                 {
                     applyBrtFilter(filtered_left, filtered_right);
@@ -144,12 +247,13 @@ namespace viewerGui
             {
                 revertOriginal();
             }
+            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
         private void sepia_radioButton_CheckedChanged(object sender, EventArgs e)
-        {  
-            if(sepia_radioButton.Checked)
+        {
+            if (sepia_radioButton.Checked)
             {
                 applySepiaFilter(origLeftimage, origRightImage);
                 if (brightness_trackBar.Value != 50)
@@ -173,12 +277,13 @@ namespace viewerGui
             {
                 revertOriginal();
             }
+            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
         private void rotate_radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if(rotate_radioButton.Checked)
+            if (rotate_radioButton.Checked)
             {
                 applyRotateFilter(origLeftimage, origRightImage);
 
@@ -203,12 +308,13 @@ namespace viewerGui
             {
                 revertOriginal();
             }
+            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
         private void invert_radioButton_CheckedChanged(object sender, EventArgs e)
         {
-            if(invert_radioButton.Checked)
+            if (invert_radioButton.Checked)
             {
                 applyInvertFilter(origLeftimage, origRightImage);
                 if (brightness_trackBar.Value != 50)
@@ -232,6 +338,7 @@ namespace viewerGui
             {
                 revertOriginal();
             }
+            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
@@ -247,7 +354,7 @@ namespace viewerGui
             try
             {
                 hue_trackBar.Value = Int32.Parse(hue_textBox.Text);
-                applyHueFilter(origLeftimage,origRightImage);
+                applyHueFilter(origLeftimage, origRightImage);
 
                 if (contrast_trackBar.Value != 50)
                 {
@@ -269,7 +376,7 @@ namespace viewerGui
                 {
                     applyGreyscaleFilter(filtered_left, filtered_right);
                 }
-                if(invert_radioButton.Checked)
+                if (invert_radioButton.Checked)
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
@@ -277,12 +384,13 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
+                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
-            catch(Exception Ex){}
-            
+            catch (Exception Ex) { }
+
         }
-        
+
         /*
          * brightness: range: [-100 100]
          * brightness = 2*track_val - 100; where trackval [0 100]
@@ -307,7 +415,7 @@ namespace viewerGui
                 {
                     applySaturationFilter(filtered_left, filtered_right);
                 }
-                if(hue_trackBar.Value != 0)
+                if (hue_trackBar.Value != 0)
                 {
                     applyHueFilter(filtered_left, filtered_right);
                 }
@@ -327,6 +435,7 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
+                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -376,6 +485,7 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
+                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -425,7 +535,7 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
-
+                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -441,7 +551,7 @@ namespace viewerGui
             try
             {
                 sharpen_trackBar.Value = Int32.Parse(sharpen_textBox.Text);
-                applySharpenFilter(origLeftimage,origRightImage);
+                applySharpenFilter(origLeftimage, origRightImage);
                 if (brightness_trackBar.Value != 50)
                 {
                     applyBrtFilter(filtered_left, filtered_right);
@@ -474,6 +584,7 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
+                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -489,7 +600,7 @@ namespace viewerGui
             try
             {
                 blur_trackBar.Value = Int32.Parse(blur_textBox.Text);
-                applyBlurFilter(origLeftimage,origRightImage);
+                applyBlurFilter(origLeftimage, origRightImage);
 
                 if (brightness_trackBar.Value != 50)
                 {
@@ -523,7 +634,7 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
-
+                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -564,8 +675,16 @@ namespace viewerGui
 
         private void applyGreyscaleFilter(Bitmap leftImage, Bitmap rightImage)
         {
-            filtered_left = grayscaleFilter.Apply(leftImage);
-            filtered_right = grayscaleFilter.Apply(rightImage);
+            try
+            {
+                filtered_left = grayscaleFilter.Apply(leftImage);
+                filtered_right = grayscaleFilter.Apply(rightImage);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
         }
         private void applySepiaFilter(Bitmap leftImage, Bitmap rightImage)
         {
@@ -602,7 +721,7 @@ namespace viewerGui
             contrastCorrection = new AForge.Imaging.Filters.ContrastCorrection(2 * contrast_trackBar.Value - 100);
 
             filtered_left = contrastCorrection.Apply(leftImage);
-            filtered_right = contrastCorrection.Apply(rightImage);                      
+            filtered_right = contrastCorrection.Apply(rightImage);
         }
 
         private void applySaturationFilter(Bitmap leftImage, Bitmap rightImage)
@@ -630,12 +749,14 @@ namespace viewerGui
         {
             filtered_left = quickSharpFilter.Apply(filtered_left);
             filtered_right = quickSharpFilter.Apply(filtered_right);
+            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
         private void applyQuickBlurFilter()
         {
             filtered_left = quickBlurFilter.Apply(filtered_left);
             filtered_right = quickBlurFilter.Apply(filtered_right);
+            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
@@ -643,6 +764,7 @@ namespace viewerGui
         {
             filtered_left = origLeftimage;
             filtered_right = origRightImage;
+            apply3D(origLeftimage, origRightImage, "color");
             displayImages();
         }
 
@@ -650,8 +772,28 @@ namespace viewerGui
         {
             left_pictureBox.Image = filtered_left;
             right_pictureBox.Image = filtered_right;
+            statistics(filtered_left, filtered_right);
+            displayDiff(filtered_left, filtered_right);
         }
 
-       
+        private void threeD_pictureBox_DoubleClick(object sender, EventArgs e)
+        {
+            try
+            {
+                threeD threeDform = new threeD(this);
+                threeDform.Show();
+            }
+            catch(Exception Ex)
+            { }
+
+
+        }
+
+        public Bitmap get3DImage(string type)
+        {
+            apply3D(filtered_left, filtered_right, type);
+            return resultImage; 
+        }
+
     }
 }
