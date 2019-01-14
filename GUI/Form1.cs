@@ -15,6 +15,18 @@ namespace viewerGui
     public partial class Form1 : Form
     {
 
+       //AForge.Video.FFMPEG.VideoFileReader reader = new AForge.Video.FFMPEG.VideoFileReader();
+        Bitmap origRightImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right_image.png");
+        Bitmap origLeftimage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left_image.png");
+        Bitmap filtered_left = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left_image.png");
+        Bitmap filtered_right = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right_image.png");
+        Bitmap left_stats = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\transparent.bmp");
+        Bitmap right_stats = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\transparent.bmp");
+        Bitmap resultImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\transparent.bmp");
+        Bitmap diffImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\transparent.bmp");
+        Bitmap sobelImageLeft = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\transparent.bmp");
+        Bitmap sobelImageRight = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\transparent.bmp");
+
         AForge.Imaging.Filters.StereoAnaglyph filter = new AForge.Imaging.Filters.StereoAnaglyph();
         AForge.Imaging.Filters.Grayscale grayscaleFilter = new AForge.Imaging.Filters.Grayscale(0.2125, 0.7154, 0.0721);
         AForge.Imaging.Filters.Sepia sepiaFilter = new AForge.Imaging.Filters.Sepia();
@@ -30,62 +42,62 @@ namespace viewerGui
         AForge.Imaging.Filters.GaussianSharpen sharpFilter = new AForge.Imaging.Filters.GaussianSharpen(4, 11);
         AForge.Imaging.Filters.Blur quickBlurFilter = new AForge.Imaging.Filters.Blur();
         AForge.Imaging.Filters.Sharpen quickSharpFilter = new AForge.Imaging.Filters.Sharpen();
-        AForge.Imaging.Filters.Difference diffFilter = new AForge.Imaging.Filters.Difference(origLeftimage);
+       // AForge.Imaging.Filters.Difference diffFilter = new AForge.Imaging.Filters.Difference(origLeftimage);
         AForge.Imaging.Filters.SobelEdgeDetector sobelFilter = new AForge.Imaging.Filters.SobelEdgeDetector();
         AForge.Imaging.Filters.GammaCorrection gammaFilter = new AForge.Imaging.Filters.GammaCorrection(0);
 
-        //AForge.Video.FFMPEG.VideoFileReader reader = new AForge.Video.FFMPEG.VideoFileReader();
-        static Bitmap origRightImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        static Bitmap origLeftimage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left.bmp");
-        Bitmap filtered_left = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left.bmp");
-        Bitmap filtered_right = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        Bitmap left_stats = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left.bmp");
-        Bitmap right_stats = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        Bitmap resultImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        Bitmap diffImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        Bitmap sobelImageLeft = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
-        Bitmap sobelImageRight = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right.bmp");
+     //   AForge.Imaging.ImageStatistics leftStats = new AForge.Imaging.ImageStatistics(origLeftimage);
+     //   AForge.Imaging.ImageStatistics rightStats = new AForge.Imaging.ImageStatistics(origRightImage);
 
-        AForge.Imaging.ImageStatistics leftStats = new AForge.Imaging.ImageStatistics(origLeftimage);
-        AForge.Imaging.ImageStatistics rightStats = new AForge.Imaging.ImageStatistics(origRightImage);
-        AForge.Imaging.VerticalIntensityStatistics leftVis = new AForge.Imaging.VerticalIntensityStatistics(origLeftimage);
-        AForge.Imaging.VerticalIntensityStatistics rightVis = new AForge.Imaging.VerticalIntensityStatistics(origRightImage);
-        AForge.Imaging.HorizontalIntensityStatistics leftHor = new AForge.Imaging.HorizontalIntensityStatistics(origLeftimage);
-        AForge.Imaging.HorizontalIntensityStatistics rightHor = new AForge.Imaging.HorizontalIntensityStatistics(origRightImage);
-
-
+        
         public Form1()
         {
             InitializeComponent();
             left_pictureBox.Image = origLeftimage;
             right_pictureBox.Image = origRightImage;
             apply3D(origLeftimage, origRightImage, "color");
-
-            displaySobel(origLeftimage, origRightImage);
-            update(origLeftimage, origRightImage);
-            orig_pictureBox.Image = origLeftimage;
-
+ 
+            update(origLeftimage, origRightImage);     
+            setUpToolTips();
         }
 
         private void update(Bitmap leftImage, Bitmap rightImage)
         {
+            apply3D(leftImage, rightImage,"color");
             statistics(leftImage, rightImage);
             displayDiff(leftImage, rightImage);
+            displaySobel(leftImage, rightImage);
+            orig_pictureBox.Image = origLeftimage;
         }
         private void displayDiff(Bitmap leftImage, Bitmap rightImage)
         {
-            diffFilter = new AForge.Imaging.Filters.Difference(leftImage);
+            AForge.Imaging.Filters.Difference diffFilter = new AForge.Imaging.Filters.Difference(leftImage);
             diffImage = diffFilter.Apply(rightImage);
             diff_pictureBox.Image = diffImage;
         }
 
         private void displaySobel(Bitmap leftImage, Bitmap rightImage)
         {
-            Bitmap left_resultImage = sobelFilter.Apply(grayscaleFilter.Apply(leftImage));
-            Bitmap right_resultImage = sobelFilter.Apply(grayscaleFilter.Apply(rightImage));
-            sobel_left_pictureBox.Image = left_resultImage;
-            sobelImageLeft = left_resultImage;
-            sobelImageRight = right_resultImage;
+            try
+            {
+                Bitmap left_resultImage = sobelFilter.Apply(grayscaleFilter.Apply(leftImage));
+                Bitmap right_resultImage = sobelFilter.Apply(grayscaleFilter.Apply(rightImage));
+
+                sobel_left_pictureBox.Image = left_resultImage;
+                sobelImageLeft = left_resultImage;
+                sobelImageRight = right_resultImage;
+            }
+            catch(Exception e)
+            {
+                Bitmap left_resultImage = sobelFilter.Apply(grayscaleFilter.Apply(origLeftimage));
+                Bitmap right_resultImage = sobelFilter.Apply(grayscaleFilter.Apply(origRightImage));
+
+                sobel_left_pictureBox.Image = left_resultImage;
+                sobelImageLeft = left_resultImage;
+                sobelImageRight = right_resultImage;
+            }
+           
+            
             // sobel_right_pictureBox.Image = right_resultImage;
         }
         private void statistics(Bitmap leftImage, Bitmap rightImage)
@@ -95,20 +107,15 @@ namespace viewerGui
 
                 // this.WindowState = FormWindowState.Maximized;
 
-                leftStats = new AForge.Imaging.ImageStatistics(leftImage);
-                rightStats = new AForge.Imaging.ImageStatistics(rightImage);
-                leftVis = new AForge.Imaging.VerticalIntensityStatistics(origLeftimage);
-                rightVis = new AForge.Imaging.VerticalIntensityStatistics(origRightImage);
-                leftHor = new AForge.Imaging.HorizontalIntensityStatistics(origLeftimage);
-                rightHor = new AForge.Imaging.HorizontalIntensityStatistics(origRightImage);
-
-                //leftVis.
+                AForge.Imaging.ImageStatistics leftStats = new AForge.Imaging.ImageStatistics(leftImage);
+                AForge.Imaging.ImageStatistics rightStats = new AForge.Imaging.ImageStatistics(rightImage);
+                
                 AForge.Math.Histogram histogram_rl = leftStats.Red;
                 AForge.Math.Histogram histogram_gl = leftStats.Green;
                 AForge.Math.Histogram histogram_bl = leftStats.Blue;
-                AForge.Math.Histogram histogram_rr = leftStats.Red;
-                AForge.Math.Histogram histogram_gr = leftStats.Green;
-                AForge.Math.Histogram histogram_br = leftStats.Blue;
+                AForge.Math.Histogram histogram_rr = rightStats.Red;
+                AForge.Math.Histogram histogram_gr = rightStats.Green;
+                AForge.Math.Histogram histogram_br = rightStats.Blue;
 
 
                 try
@@ -140,30 +147,30 @@ namespace viewerGui
                 {
                     if (row.Index == 2)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Blue;
+                        row.DefaultCellStyle.BackColor = Color.RoyalBlue;
                     }
                     if (row.Index == 1)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Green;
+                        row.DefaultCellStyle.BackColor = Color.SeaGreen;
                     }
                     if (row.Index == 0)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Red;
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
                     }
                 }
                 foreach (DataGridViewRow row in rstats_dataGridView.Rows)
                 {
                     if (row.Index == 2)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Blue;
+                        row.DefaultCellStyle.BackColor = Color.RoyalBlue;
                     }
                     if (row.Index == 1)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Green;
+                        row.DefaultCellStyle.BackColor = Color.SeaGreen;
                     }
                     if (row.Index == 0)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Red;
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
                     }
                 }
 
@@ -173,6 +180,12 @@ namespace viewerGui
                 Bitmap left_stats = new Bitmap(histWidth, histHeight);
                 Bitmap right_stats = new Bitmap(histWidth, histHeight);
 
+                var semiRed = Color.FromArgb(128, Color.Red);
+                Pen red = new Pen(semiRed, 1);
+                var semiGreen = Color.FromArgb(128, Color.Green);
+                Pen green = new Pen(semiGreen, 1);
+                var semiBlue = Color.FromArgb(128, Color.Blue);
+                Pen blue = new Pen(semiBlue, 1);
                 using (Graphics g = Graphics.FromImage(left_stats))
                 {
                     for (int i = 1; i < 256; i++)
@@ -181,16 +194,15 @@ namespace viewerGui
                         float pct_g = histogram_gl.Values[i] / histogram_gl.Max;
                         float pct_b = histogram_bl.Values[i] / histogram_bl.Max;
 
-
-                        g.DrawLine(Pens.Red,
+                        g.DrawLine(red,
                             new Point(i, left_stats.Height - 5),
                             new Point(i, left_stats.Height - 5 - (int)(pct_r * histHeight))
                             );
-                        g.DrawLine(Pens.Green,
+                        g.DrawLine(green,
                             new Point(i, left_stats.Height - 5),
                             new Point(i, left_stats.Height - 5 - (int)(pct_g * histHeight))
                             );
-                        g.DrawLine(Pens.Blue,
+                        g.DrawLine(blue,
                             new Point(i, left_stats.Height - 5),
                             new Point(i, left_stats.Height - 5 - (int)(pct_b * histHeight))
                             );
@@ -206,15 +218,15 @@ namespace viewerGui
                         float pct_b = histogram_br.Values[i] / histogram_br.Max;
 
 
-                        g.DrawLine(Pens.Red,
+                        g.DrawLine(red,
                             new Point(i, left_stats.Height - 5),
                             new Point(i, left_stats.Height - 5 - (int)(pct_r * histHeight))
                             );
-                        g.DrawLine(Pens.Green,
+                        g.DrawLine(green,
                             new Point(i, left_stats.Height - 5),
                             new Point(i, left_stats.Height - 5 - (int)(pct_g * histHeight))
                             );
-                        g.DrawLine(Pens.Blue,
+                        g.DrawLine(blue,
                             new Point(i, left_stats.Height - 5),
                             new Point(i, left_stats.Height - 5 - (int)(pct_b * histHeight))
                             );
@@ -366,7 +378,6 @@ namespace viewerGui
             {
                 revertOriginal();
             }
-            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
@@ -396,7 +407,6 @@ namespace viewerGui
             {
                 revertOriginal();
             }
-            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
@@ -427,7 +437,6 @@ namespace viewerGui
             {
                 revertOriginal();
             }
-            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
@@ -457,7 +466,6 @@ namespace viewerGui
             {
                 revertOriginal();
             }
-            apply3D(filtered_left, filtered_right, "color");
             displayImages();
         }
 
@@ -507,7 +515,6 @@ namespace viewerGui
                 {
                     applyGammaFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -562,7 +569,6 @@ namespace viewerGui
                 {
                     applyGammaFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -616,7 +622,6 @@ namespace viewerGui
                 {
                     applyGammaFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -670,7 +675,6 @@ namespace viewerGui
                 {
                     applyGammaFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -723,7 +727,6 @@ namespace viewerGui
                 {
                     applyGammaFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -777,7 +780,6 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -827,7 +829,6 @@ namespace viewerGui
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
-                apply3D(filtered_left, filtered_right, "color");
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -990,8 +991,6 @@ namespace viewerGui
             }
             catch (Exception Ex)
             { }
-
-
         }
 
         private void diff_pictureBox_DoubleClick(object sender, EventArgs e)
@@ -1067,6 +1066,206 @@ namespace viewerGui
             rstats_dataGridView.ClearSelection();
         }
 
-        
+        private void setUpToolTips()
+        {
+            // Create the ToolTip and associate with the Form container.
+            ToolTip toolTip1 = new ToolTip();
+
+          
+            // Force the ToolTip text to be displayed whether or not the form is active.
+            toolTip1.ShowAlways = true;
+
+            // Set up the ToolTip text for the Button and Checkbox.
+            toolTip1.SetToolTip(this.left_pictureBox, "Left");
+            //toolTip1.SetToolTip(this.checkBox1, "My checkBox1");
+        }
+
+        private void left_button_Click(object sender, EventArgs e)
+        {
+            right_pictureBox.Hide();
+            left_pictureBox.Show();
+            splitContainer1.Panel2Collapsed = true;
+            splitContainer2.Panel2Collapsed = true;
+        }
+
+        private void both_button_Click(object sender, EventArgs e)
+        {
+            left_pictureBox.Show();
+            right_pictureBox.Show();
+            splitContainer1.Panel1Collapsed = false;
+            splitContainer2.Panel1Collapsed = false;
+            splitContainer1.Panel2Collapsed = false;
+            splitContainer2.Panel2Collapsed = false;
+        }
+
+        private void right_button_Click(object sender, EventArgs e)
+        {
+            left_pictureBox.Hide();
+            right_pictureBox.Show();
+            splitContainer1.Panel1Collapsed = true;
+            splitContainer2.Panel1Collapsed = true;
+        }
+
+        private void rightImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            if (ofd.ShowDialog() == DialogResult.OK && ofd.FileName.Length > 0)
+            {
+                right_pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                right_pictureBox.Image = Image.FromFile(ofd.FileName);
+                origRightImage = (Bitmap)Image.FromFile(ofd.FileName);
+                filtered_right = (Bitmap)Image.FromFile(ofd.FileName);
+
+                try
+                {
+                    update(origLeftimage, origRightImage);
+
+                }
+                catch(Exception ex)
+                {
+
+                }
+            }
+        }
+
+        private void leftImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            if (ofd.ShowDialog() == DialogResult.OK && ofd.FileName.Length > 0)
+            {
+                left_pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                left_pictureBox.Image = Image.FromFile(ofd.FileName);
+                origLeftimage = (Bitmap)Image.FromFile(ofd.FileName);
+                filtered_left = (Bitmap)Image.FromFile(ofd.FileName);
+                //update(origLeftimage, origRightImage);
+            }
+        }
+
+
+       
+        private void leftImageToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Left";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                left_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+
+        private void rightImageToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Right";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                right_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+
+        private void anaglyphToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Anaglyph";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                threeD_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+
+        private void differenceImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Difference";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                diff_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+
+        private void sobelImageToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Sobel";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                sobel_left_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+
+        private void allImagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Right";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                right_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("3DAD IMAGE VIEWER\n\nThis program allows a user to upload a set of 2-D images, and " +
+                "applies processing to yield an anaglyph, a 3-D image comprised of the 2 images." +
+                "\n\nThis program utilizes the AForge.NET framework, available at http://www.aforgenet.com/framework/");
+        }
+
+        private void orig_pictureBox_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void left_pictureBox_DoubleClick(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            if (ofd.ShowDialog() == DialogResult.OK && ofd.FileName.Length > 0)
+            {
+                left_pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                left_pictureBox.Image = Image.FromFile(ofd.FileName);
+                origLeftimage = (Bitmap)Image.FromFile(ofd.FileName);
+                filtered_left = (Bitmap)Image.FromFile(ofd.FileName);
+
+
+                //update(origLeftimage, origRightImage);
+            }
+        }
+        private void right_pictureBox_DoubleClick(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            if (ofd.ShowDialog() == DialogResult.OK && ofd.FileName.Length > 0)
+            {
+                right_pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                right_pictureBox.Image = Image.FromFile(ofd.FileName);
+                origRightImage = (Bitmap)Image.FromFile(ofd.FileName);
+                filtered_right= (Bitmap)Image.FromFile(ofd.FileName);
+                update(origLeftimage, origRightImage);
+            }
+        }
+
     }
 }
