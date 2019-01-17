@@ -6,23 +6,14 @@ RF24 radio(9,10);
 
 void setup(void){
   radio.begin();//Start the radio
-  radio.setPALevel(RF24_PA_MAX);
-  radio.setChannel(0x76);
-  radio.openWritingPipe(0xF0F0F0F0E1LL);
-  radio.enableDynamicPayloads();
-  radio.powerUp();
-
+  radio.setPALevel(RF24_PA_MAX);//Setting the Power Amplification Level
+  radio.setChannel(0x76);//Setting channel
+  radio.openWritingPipe(0xF0F0F0F0E1LL);//Open the sending address
+  radio.enableDynamicPayloads();//Enable dynamic payloads
+  radio.powerUp();//Power up the radio
 }
-
 void loop(void) {
-  // put your main code here, to run repeatedly:
-//  const char text[] = "1";
-//  radio.write(&text, sizeof(text));
-
-  int potValue = analogRead(A0);
-  int angleValue = map(potValue, 0, 1023, 0, 13);
-  radio.write(&angleValue, sizeof(angleValue));
-  
-  delay(500);
-  
+  const char text[] = "Radio Communication Test";//Create a message
+  radio.write(&text, sizeof(text));//Send the message
+  delay(1000);
 }
