@@ -1,3 +1,8 @@
+#check to see that both cameras are supported and detected. 
+pi@raspberrypi $ vcgencmd get_camera
+
+#it should come back that two cameras are supported and detected. If this does not happen, continue troubleshooting
+
 #goes to Desktop directory
 pi@raspberrypi $ cd /home/pi/Desktop/
 #creates a new directory called CameraPictures
