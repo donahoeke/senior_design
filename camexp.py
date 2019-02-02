@@ -1,14 +1,12 @@
 import picamera
 import time
 
-camrea = picamera.PiCamera()
-camera.vflip = True #vertically flips the image so it is right side up
+camera = picamera.PiCamera(mode = stereo "side-by-side")
 
+camera.capture("test_plan.bmp")
 
-#This goes through all of the image effects that the RPi can apply to images
+time.sleep(2)
 
-for effect in camera.IMAGE_EFFECTS:
-  filename = "image_%s.jpg" % effect #this names the file with the effect that was used
-  camera.image_effect = effect
-  camera.capture(filename)
-  time.sleep(1)
+camera.start_recording("testvid.h264")
+time.sleep(5)
+camera.stop_recording()
