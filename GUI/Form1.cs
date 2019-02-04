@@ -14,8 +14,7 @@ namespace viewerGui
 {
     public partial class Form1 : Form
     {
-
-       //AForge.Video.FFMPEG.VideoFileReader reader = new AForge.Video.FFMPEG.VideoFileReader();
+        AForge.Video.FFMPEG.VideoFileReader reader = new AForge.Video.FFMPEG.VideoFileReader();
         Bitmap origRightImage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\right_image.png");
         Bitmap origLeftimage = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left_image.png");
         Bitmap filtered_left = new Bitmap(@"C:\Users\donahoeke\Desktop\Senior Design\left_image.png");
@@ -46,17 +45,17 @@ namespace viewerGui
         AForge.Imaging.Filters.SobelEdgeDetector sobelFilter = new AForge.Imaging.Filters.SobelEdgeDetector();
         AForge.Imaging.Filters.GammaCorrection gammaFilter = new AForge.Imaging.Filters.GammaCorrection(0);
 
-     //   AForge.Imaging.ImageStatistics leftStats = new AForge.Imaging.ImageStatistics(origLeftimage);
-     //   AForge.Imaging.ImageStatistics rightStats = new AForge.Imaging.ImageStatistics(origRightImage);
+        Boolean brtFlag = false;
 
-        
+        //   AForge.Imaging.ImageStatistics leftStats = new AForge.Imaging.ImageStatistics(origLeftimage);
+        //   AForge.Imaging.ImageStatistics rightStats = new AForge.Imaging.ImageStatistics(origRightImage);
+
         public Form1()
         {
             InitializeComponent();
             left_pictureBox.Image = origLeftimage;
             right_pictureBox.Image = origRightImage;
-            apply3D(origLeftimage, origRightImage, "color");
- 
+
             update(origLeftimage, origRightImage);     
             setUpToolTips();
         }
@@ -262,30 +261,30 @@ namespace viewerGui
                 {
                     if (row.Index == 2)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Blue;
+                        row.DefaultCellStyle.BackColor = Color.RoyalBlue;
                     }
                     if (row.Index == 1)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Green;
+                        row.DefaultCellStyle.BackColor = Color.SeaGreen;
                     }
                     if (row.Index == 0)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Red;
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
                     }
                 }
                 foreach (DataGridViewRow row in rstats_dataGridView.Rows)
                 {
                     if (row.Index == 2)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Blue;
+                        row.DefaultCellStyle.BackColor = Color.RoyalBlue;
                     }
                     if (row.Index == 1)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Green;
+                        row.DefaultCellStyle.BackColor = Color.SeaGreen;
                     }
                     if (row.Index == 0)
                     {
-                        row.DefaultCellStyle.BackColor = Color.Red;
+                        row.DefaultCellStyle.BackColor = Color.LightCoral;
                     }
                 }
 
@@ -350,7 +349,44 @@ namespace viewerGui
             }
         }
 
+        public Bitmap apply3D2(Bitmap leftImage, Bitmap rightImage, string anaglyph_type)
+        {
 
+            string caseSwitch = anaglyph_type;
+
+            switch (caseSwitch)
+            {
+                case "Color":
+                    filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.ColorAnaglyph;
+                    break;
+                case "True":
+                    filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.TrueAnaglyph;
+                    break;
+                case "Gray":
+                    filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.GrayAnaglyph;
+                    break;
+                case "Half":
+                    filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.HalfColorAnaglyph;
+                    break;
+                case "Optimized":
+                    filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.OptimizedAnaglyph;
+                    break;
+                default:
+                    filter.AnaglyphAlgorithm = AForge.Imaging.Filters.StereoAnaglyph.Algorithm.ColorAnaglyph;
+                    break;
+            }
+
+            //  try
+            {
+                filter.OverlayImage = leftImage;
+                resultImage = filter.Apply(rightImage);
+                return resultImage;
+            }
+            //  catch (Exception ex)
+            {
+
+            }
+        }
         private void greyscale_radioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (greyscale_radioButton.Checked)
@@ -410,35 +446,6 @@ namespace viewerGui
             displayImages();
         }
 
-        private void rotate_radioButton_CheckedChanged(object sender, EventArgs e)
-        {
-            if (rotate_radioButton.Checked)
-            {
-                applyRotateFilter(origLeftimage, origRightImage);
-
-                if (brightness_trackBar.Value != 50)
-                {
-                    applyBrtFilter(filtered_left, filtered_right);
-                }
-                if (saturation_trackBar.Value != 50)
-                {
-                    applySaturationFilter(filtered_left, filtered_right);
-                }
-                if (contrast_trackBar.Value != 50)
-                {
-                    applyContrastFilter(filtered_left, filtered_right);
-                }
-                if (hue_trackBar.Value != 0)
-                {
-                    applyHueFilter(filtered_left, filtered_right);
-                }
-            }
-            else
-            {
-                revertOriginal();
-            }
-            displayImages();
-        }
 
         private void invert_radioButton_CheckedChanged(object sender, EventArgs e)
         {
@@ -507,10 +514,6 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
-                {
-                    applyRotateFilter(filtered_left, filtered_right);
-                }
                 if (gamma_trackBar.Value != 0)
                 {
                     applyGammaFilter(filtered_left, filtered_right);
@@ -561,13 +564,18 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
-                {
-                    applyRotateFilter(filtered_left, filtered_right);
-                }
                 if (gamma_trackBar.Value != 0)
                 {
                     applyGammaFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 1)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                    applyRotateFilter(filtered_left, filtered_right);
                 }
                 displayImages();
             }
@@ -614,13 +622,18 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
-                {
-                    applyRotateFilter(filtered_left, filtered_right);
-                }
                 if (gamma_trackBar.Value != 0)
                 {
                     applyGammaFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 1)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                    applyRotateFilter(filtered_left, filtered_right);
                 }
                 displayImages();
             }
@@ -667,13 +680,18 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
-                {
-                    applyRotateFilter(filtered_left, filtered_right);
-                }
                 if (gamma_trackBar.Value != 0)
                 {
                     applyGammaFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 1)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                    applyRotateFilter(filtered_left, filtered_right);
                 }
                 displayImages();
             }
@@ -719,13 +737,18 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
-                {
-                    applyRotateFilter(filtered_left, filtered_right);
-                }
                 if (gamma_trackBar.Value != 0)
                 {
                     applyGammaFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 1)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                    applyRotateFilter(filtered_left, filtered_right);
                 }
                 displayImages();
             }
@@ -776,8 +799,13 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
+                if (rotate == 1)
                 {
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+                if (rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
                     applyRotateFilter(filtered_left, filtered_right);
                 }
                 displayImages();
@@ -825,10 +853,16 @@ namespace viewerGui
                 {
                     applyInvertFilter(filtered_left, filtered_right);
                 }
-                if (rotate_radioButton.Checked)
+                if (rotate == 1)
                 {
                     applyRotateFilter(filtered_left, filtered_right);
                 }
+                if (rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+
                 displayImages();
             }
             catch (Exception Ex) { }
@@ -861,10 +895,11 @@ namespace viewerGui
             sharpen_textBox.Text = "0";
             blur_trackBar.Value = 0;
             blur_textBox.Text = "0";
+            rotate = 0;
 
             greyscale_radioButton.Checked = false;
             invert_radioButton.Checked = false;
-            rotate_radioButton.Checked = false;
+            //rotate_radioButton.Checked = false;
             sepia_radioButton.Checked = false;
         }
 
@@ -1076,7 +1111,14 @@ namespace viewerGui
             toolTip1.ShowAlways = true;
 
             // Set up the ToolTip text for the Button and Checkbox.
-            toolTip1.SetToolTip(this.left_pictureBox, "Left");
+            toolTip1.SetToolTip(this.left_pictureBox, "Double click to upload left image");
+            toolTip1.SetToolTip(this.right_pictureBox, "Double click to upload right image");
+            toolTip1.SetToolTip(this.orig_pictureBox, "Double click to view the set of original images");
+            toolTip1.SetToolTip(this.sobel_left_pictureBox, "Double click to view/save the set of sobel transform edge images");
+            toolTip1.SetToolTip(this.diff_pictureBox, "Double click to view/save the difference image of the set of the images");
+            toolTip1.SetToolTip(this.threeD_pictureBox, "Double click to view/save the 3-D anaglyph image created from the set of the images");
+            toolTip1.SetToolTip(this.lstats_dataGridView, "Mean,Median,Std dev of RGB values of left image");
+            toolTip1.SetToolTip(this.rstats_dataGridView, "Mean,Median,Std dev of RGB values of right image");
             //toolTip1.SetToolTip(this.checkBox1, "My checkBox1");
         }
 
@@ -1267,5 +1309,72 @@ namespace viewerGui
             }
         }
 
+        private void save3D_button_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "jpg (*.jpg)|*.jpg|bmp (*.bmp)|*.bmp|png (*.png)|*.png";
+
+            sfd.FileName = "Anaglyph";
+            if (sfd.ShowDialog() == DialogResult.OK && sfd.FileName.Length > 0)
+            {
+                threeD_pictureBox.Image.Save(sfd.FileName);
+            }
+        }
+        int rotate = 0;
+        private void rotate_button_Click(object sender, EventArgs e)
+        {
+            greyscale_radioButton.Checked = false;
+            invert_radioButton.Checked = false;
+            //rotate_radioButton.Checked = false;
+            sepia_radioButton.Checked = false;
+
+            if (rotate == 1 || rotate == 2)
+                {
+                    applyRotateFilter(filtered_left, filtered_right);
+                }
+                else
+                {
+                    applyRotateFilter(origLeftimage, origRightImage);
+                }
+
+                if (rotate == 3)
+                {
+                    rotate = 0;
+                }
+                rotate++;
+                if (brightness_trackBar.Value != 50)
+                {
+                    applyBrtFilter(filtered_left, filtered_right);
+                }
+                if (saturation_trackBar.Value != 50)
+                {
+                    applySaturationFilter(filtered_left, filtered_right);
+                }
+                if (contrast_trackBar.Value != 50)
+                {
+                    applyContrastFilter(filtered_left, filtered_right);
+                }
+                if (hue_trackBar.Value != 0)
+                {
+                    applyHueFilter(filtered_left, filtered_right);
+                }
+            displayImages();
+        }
+
+        private void multipleIO_button_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                multipleIOcs mio = new multipleIOcs(this);
+                mio.Show();
+            }
+            catch (Exception Ex)
+            { }
+        }
+
+        private void vid_button_Click(object sender, EventArgs e)
+        {
+            reader.Open("vid.mp4");
+        }
     }
 }
