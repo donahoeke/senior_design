@@ -66,6 +66,8 @@ namespace viewerGui
             this.label34 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.rotate_button = new System.Windows.Forms.Button();
+            this.save3D_button = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.gamma_textBox = new System.Windows.Forms.TextBox();
             this.label31 = new System.Windows.Forms.Label();
@@ -90,7 +92,6 @@ namespace viewerGui
             this.saturation_trackBar = new System.Windows.Forms.TrackBar();
             this.sepia_radioButton = new System.Windows.Forms.RadioButton();
             this.label6 = new System.Windows.Forms.Label();
-            this.rotate_radioButton = new System.Windows.Forms.RadioButton();
             this.contrast_textBox = new System.Windows.Forms.TextBox();
             this.invert_radioButton = new System.Windows.Forms.RadioButton();
             this.contrast_trackBar = new System.Windows.Forms.TrackBar();
@@ -115,6 +116,8 @@ namespace viewerGui
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.multipleIO_button = new System.Windows.Forms.Button();
+            this.vid_button = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -297,7 +300,6 @@ namespace viewerGui
             this.lmean_Column,
             this.lmedian_Column,
             this.lstd_Column});
-            this.lstats_dataGridView.Enabled = false;
             this.lstats_dataGridView.Location = new System.Drawing.Point(1, 1);
             this.lstats_dataGridView.Name = "lstats_dataGridView";
             this.lstats_dataGridView.RowHeadersVisible = false;
@@ -385,7 +387,6 @@ namespace viewerGui
             this.dataGridViewTextBoxColumn1,
             this.dataGridViewTextBoxColumn2,
             this.dataGridViewTextBoxColumn3});
-            this.rstats_dataGridView.Enabled = false;
             this.rstats_dataGridView.Location = new System.Drawing.Point(1, 0);
             this.rstats_dataGridView.Name = "rstats_dataGridView";
             this.rstats_dataGridView.RowHeadersVisible = false;
@@ -478,7 +479,7 @@ namespace viewerGui
             // 
             // label13
             // 
-            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -490,7 +491,6 @@ namespace viewerGui
             // 
             // diff_pictureBox
             // 
-            this.diff_pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.diff_pictureBox.BackColor = System.Drawing.Color.DarkGray;
             this.diff_pictureBox.Location = new System.Drawing.Point(0, 15);
             this.diff_pictureBox.Name = "diff_pictureBox";
@@ -502,7 +502,7 @@ namespace viewerGui
             // 
             // orig_pictureBox
             // 
-            this.orig_pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.orig_pictureBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.orig_pictureBox.BackColor = System.Drawing.Color.DarkGray;
             this.orig_pictureBox.Location = new System.Drawing.Point(0, 458);
             this.orig_pictureBox.Name = "orig_pictureBox";
@@ -527,7 +527,6 @@ namespace viewerGui
             // 
             // label35
             // 
-            this.label35.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label35.AutoSize = true;
             this.label35.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label35.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -589,6 +588,8 @@ namespace viewerGui
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel2.BackColor = System.Drawing.Color.DarkGray;
+            this.panel2.Controls.Add(this.rotate_button);
+            this.panel2.Controls.Add(this.save3D_button);
             this.panel2.Controls.Add(this.label12);
             this.panel2.Controls.Add(this.gamma_textBox);
             this.panel2.Controls.Add(this.label31);
@@ -613,7 +614,6 @@ namespace viewerGui
             this.panel2.Controls.Add(this.saturation_trackBar);
             this.panel2.Controls.Add(this.sepia_radioButton);
             this.panel2.Controls.Add(this.label6);
-            this.panel2.Controls.Add(this.rotate_radioButton);
             this.panel2.Controls.Add(this.contrast_textBox);
             this.panel2.Controls.Add(this.invert_radioButton);
             this.panel2.Controls.Add(this.contrast_trackBar);
@@ -627,6 +627,30 @@ namespace viewerGui
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(225, 675);
             this.panel2.TabIndex = 40;
+            // 
+            // rotate_button
+            // 
+            this.rotate_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.rotate_button.BackColor = System.Drawing.Color.DarkGray;
+            this.rotate_button.Location = new System.Drawing.Point(111, 50);
+            this.rotate_button.Name = "rotate_button";
+            this.rotate_button.Size = new System.Drawing.Size(111, 23);
+            this.rotate_button.TabIndex = 54;
+            this.rotate_button.Text = "Rotate Channels";
+            this.rotate_button.UseVisualStyleBackColor = false;
+            this.rotate_button.Click += new System.EventHandler(this.rotate_button_Click);
+            // 
+            // save3D_button
+            // 
+            this.save3D_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.save3D_button.BackColor = System.Drawing.Color.DarkGray;
+            this.save3D_button.Location = new System.Drawing.Point(180, 640);
+            this.save3D_button.Name = "save3D_button";
+            this.save3D_button.Size = new System.Drawing.Size(45, 23);
+            this.save3D_button.TabIndex = 52;
+            this.save3D_button.Text = "Save";
+            this.save3D_button.UseVisualStyleBackColor = false;
+            this.save3D_button.Click += new System.EventHandler(this.save3D_button_Click);
             // 
             // label12
             // 
@@ -896,20 +920,6 @@ namespace viewerGui
             this.label6.TabIndex = 25;
             this.label6.Text = "Contrast";
             // 
-            // rotate_radioButton
-            // 
-            this.rotate_radioButton.AutoSize = true;
-            this.rotate_radioButton.BackColor = System.Drawing.Color.Transparent;
-            this.rotate_radioButton.ForeColor = System.Drawing.Color.White;
-            this.rotate_radioButton.Location = new System.Drawing.Point(111, 50);
-            this.rotate_radioButton.Name = "rotate_radioButton";
-            this.rotate_radioButton.Size = new System.Drawing.Size(104, 17);
-            this.rotate_radioButton.TabIndex = 14;
-            this.rotate_radioButton.TabStop = true;
-            this.rotate_radioButton.Text = "Rotate Channels";
-            this.rotate_radioButton.UseVisualStyleBackColor = false;
-            this.rotate_radioButton.Click += new System.EventHandler(this.rotate_radioButton_CheckedChanged);
-            // 
             // contrast_textBox
             // 
             this.contrast_textBox.Location = new System.Drawing.Point(179, 176);
@@ -1140,16 +1150,41 @@ namespace viewerGui
             this.helpToolStripMenuItem.Text = "About";
             this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
             // 
+            // multipleIO_button
+            // 
+            this.multipleIO_button.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.multipleIO_button.BackColor = System.Drawing.Color.DarkGray;
+            this.multipleIO_button.Location = new System.Drawing.Point(1283, 1);
+            this.multipleIO_button.Name = "multipleIO_button";
+            this.multipleIO_button.Size = new System.Drawing.Size(78, 23);
+            this.multipleIO_button.TabIndex = 53;
+            this.multipleIO_button.Text = "Simple I/O";
+            this.multipleIO_button.UseVisualStyleBackColor = false;
+            this.multipleIO_button.Click += new System.EventHandler(this.multipleIO_button_Click);
+            // 
+            // vid_button
+            // 
+            this.vid_button.Location = new System.Drawing.Point(1138, 1);
+            this.vid_button.Name = "vid_button";
+            this.vid_button.Size = new System.Drawing.Size(75, 23);
+            this.vid_button.TabIndex = 52;
+            this.vid_button.Text = "Video";
+            this.vid_button.UseVisualStyleBackColor = true;
+            this.vid_button.Click += new System.EventHandler(this.vid_button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.ClientSize = new System.Drawing.Size(1361, 749);
+            this.Controls.Add(this.vid_button);
+            this.Controls.Add(this.multipleIO_button);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
+            this.MinimumSize = new System.Drawing.Size(1377, 788);
             this.Name = "Form1";
             this.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.Text = "3DAD Image & Video Viewer";
@@ -1221,7 +1256,6 @@ namespace viewerGui
         private System.Windows.Forms.TrackBar saturation_trackBar;
         private System.Windows.Forms.RadioButton sepia_radioButton;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.RadioButton rotate_radioButton;
         private System.Windows.Forms.TextBox contrast_textBox;
         private System.Windows.Forms.RadioButton invert_radioButton;
         private System.Windows.Forms.TrackBar contrast_trackBar;
@@ -1283,5 +1317,9 @@ namespace viewerGui
         private System.Windows.Forms.PictureBox orig_pictureBox;
         private System.Windows.Forms.PictureBox left_pictureBox;
         private System.Windows.Forms.PictureBox right_pictureBox;
+        private System.Windows.Forms.Button save3D_button;
+        private System.Windows.Forms.Button multipleIO_button;
+        private System.Windows.Forms.Button rotate_button;
+        private System.Windows.Forms.Button vid_button;
     }
 }
