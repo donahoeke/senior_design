@@ -45,3 +45,30 @@ radio.startListening()
 
 #This loop will have the radio sit and wait unil a message is received
 while True:
+        #If no message received, go to sleep then wake up and check again
+        while not radio.available(0):
+                time.sleep(1/100)
+        #Creating an instance to store the received message into
+        receivedMessage = []
+        
+        #Read what is received
+        radio.read(receivedMessage, radio.getDynamicPayloadSize())
+        
+        #Display what is received
+        
+        print("Received: {}".format(receivedMessage))
+        
+        #The data that is sent across this radio is a byte at a time up to 32 byte payload and a byte is made up of 8 bits
+        #and 8 bits can only be a number between 0 and 255.  So anything that we get will be 32 numbers between 0 and 255
+        #string characters into a unicode, so we will need to decode the received message into strings
+        print("Translating our received message into unicode characters...")
+        
+        #Creating an instance for an empty string to store that received message into
+        string = ""
+        
+        for n in receivedMessage:
+                if (n >= 32 and n <= 126):
+                        #Decodes the bye value n into letters
+                        string += char(n)
+                  
+        print("our received message decodes to: {}".format(string))
