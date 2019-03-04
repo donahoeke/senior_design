@@ -1,0 +1,74 @@
+#include<SPI.h>
+#include<RF24.h>
+
+// ce, csn pins
+RF24 radio(9,10);
+
+
+int newValue = 0;
+int highVal = 1023;
+int lowVal = 0;
+
+void setup(void){
+  // put your setup code here, to run once:
+
+  Serial.begin(9600);
+  
+  radio.begin();
+  radio.setPALevel(RF24_PA_MAX);
+  radio.setChannel(0x76);
+  radio.openWritingPipe(0xF0F0F0F0E1LL);
+  radio.enableDynamicPayloads();
+  radio.powerUp();
+
+}
+
+void loop(void) {
+
+int potValue = analogRead(A0);
+String pot = "The pot value is = ";
+String showpot = pot + potValue;
+Serial.println(showpot);
+Serial.println('\n');
+delay(1000);
+
+lowVal = newValue - 5;
+highVal = newValue + 5;
+String low = "The lower value is = ";
+String high = " and The higher value is = ";
+String showlowhigh = low + lowVal + high + highVal;
+Serial.println(showlowhigh);
+Serial.println('\n');
+delay(1000);
+
+
+  while(newValue != potValue){
+    if(newValue >= lowVal && newValue <= highVal){
+      Serial.println("You are INSIDE the while loop");
+      delay(1000);
+      newValue = potValue;
+
+    }
+    else{
+      int angleValue = map(potValue, 0, 1023, 0, 13);
+      radio.write(&angleValue, sizeof(angleValue));
+    
+      String one = "The oldValue = ";
+      String two = "The newValue = ";
+      String oldValue = one + newValue;
+    
+      newValue = potValue;
+    
+      String newValues = two + newValue;
+      Serial.println(oldValue);
+      delay(50);      
+      Serial.println(newValues);
+      //delay(1000);
+      delay(500);      
+    }
+  }
+
+  Serial.println("You are OUTSIDE of while loop");
+  //delay(1000);
+  delay(500);
+}
