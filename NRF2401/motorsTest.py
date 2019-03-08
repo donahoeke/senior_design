@@ -6,18 +6,25 @@ import RPi.GPIO as IO
 
 #BCM Pin 18
 
-pin = 18
+pin0 = 18
+pin1 =12
 IO.setwarnings(False)
 IO.setmode (IO.BCM)
-IO.setup(pin,IO.OUT)
+IO.setup(pin0,IO.OUT)
+IO.setup(pin1,IO.OUT)
 
 #Starts 50 Hz PWM signal at 10% duty cycle
-signal = IO.PWM(pin,50)
-signal.start(10)
+signal0 = IO.PWM(pin0,50)
+signal0.start(10)
+
+signal1 = IO.PWM(pin1,50)
+signal1.start(10)
+
 time.sleep(0.7)
 
 #Turns signal off
-signal.ChangeDutyCycle(0)
+signal0.ChangeDutyCycle(0)
+signal1.ChangeDutyCycle(0)
 
 #Setting the GPIO for pin connections
 GPIO.setmode(GPIO.BCM)
@@ -66,30 +73,32 @@ while True:
 	#The data that is sent across this radio is a byte at a time up to 32 byte payload and a byte is made up of 8 bits
 	#and 8 bits can only be a number between 0 and 255.  So anything that we get will be 32 numbers between 0 and 255.  To get a string you encode your
 	#string characters into a unicode, so we will need to decode the received message into strings
-	print("Translating our received message into unicode characters...")
+	#print("Translating our received message into unicode characters...")
 
 	#Creating an instance for an empty string to store that received message into
 	string = ""
-	
-	for n in receivedMessage:
-		if (n >= 32 and n <= 126):
-			#Decodes the byte value n into letters
-			string += chr(n)
-	print("Our received message decodes to: {}".format(string))
-	
+
+	#for n in receivedMessage:
+	#if (n >= 32 and n <= 126):
+	#Decodes the byte value n into letters
+	#string += chr(n)
+	#print("Our received message decodes to: {}".format(string))
+
+	n = receivedMessage[0]
+
 	position = float(n)
-	
-	if(position >= 100 and position <= 113)
+	print("position "+ str(position))
+
+	if (position >= 103 and position <= 113):
 		position1 = position - 100
-		signal.ChangeDutyCycle(position1)
+		signal0.ChangeDutyCycle(position1)
 		time.sleep(0.7)
-		signal.ChangeDutyCycle(0)
-		print(position1)
-	
-	if(position >=200 and position <= 213)
+		signal0.ChangeDutyCycle(0)
+		print("Motor position 1: " + str(position1))
+
+	if(position >=203 and position <= 213):
 		position2 = position - 200
-		signal.ChangeDutyCycle(position2)
+		signal1.ChangeDutyCycle(position2)
 		time.sleep(0.7)
-		signal.ChangeDutyCycle(0)
-		print(position2)
-		
+		signal1.ChangeDutyCycle(0)
+		print("Motor position 2: " + str(position2))
