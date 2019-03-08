@@ -19,16 +19,6 @@ time.sleep(0.7)
 #Turns signal off
 signal.ChangeDutyCycle(0)
 
-while 1:
-        #Takes input from user (duty cycle: 1-100; ideally 3-12% for motors)
-        duty = input("Duty Cycle: ")
-        try:
-                signal.ChangeDutyCycle(int(duty))
-                time.sleep(0.7)
-                signal.ChangeDutyCycle(0)
-
-        except:
-                print("Duty cycle not valid. Try again.")
 #Setting the GPIO for pin connections
 GPIO.setmode(GPIO.BCM)
 
@@ -80,8 +70,26 @@ while True:
 
 	#Creating an instance for an empty string to store that received message into
 	string = ""
+	
 	for n in receivedMessage:
 		if (n >= 32 and n <= 126):
 			#Decodes the byte value n into letters
 			string += chr(n)
 	print("Our received message decodes to: {}".format(string))
+	
+	position = float(n)
+	
+	if(position >= 100 and position <= 113)
+		position1 = position - 100
+		signal.ChangeDutyCycle(position1)
+		time.sleep(0.7)
+		signal.ChangeDutyCycle(0)
+		print(position1)
+	
+	if(position >=200 and position <= 213)
+		position2 = position - 200
+		signal.ChangeDutyCycle(position2)
+		time.sleep(0.7)
+		signal.ChangeDutyCycle(0)
+		print(position2)
+		
