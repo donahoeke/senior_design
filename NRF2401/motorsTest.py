@@ -4,8 +4,7 @@ import time
 import spidev
 import RPi.GPIO as IO
 
-#BCM Pin 18
-
+#BCM Pins (PWM0) :18,12 
 pin0 = 18
 pin1 =12
 IO.setwarnings(False)
@@ -89,16 +88,18 @@ while True:
 	position = float(n)
 	print("position "+ str(position))
 
+	#Changes position of first motor
 	if (position >= 103 and position <= 113):
 		position1 = position - 100
 		signal0.ChangeDutyCycle(position1)
-		time.sleep(0.7)
+		time.sleep(0.2)
 		signal0.ChangeDutyCycle(0)
 		print("Motor position 1: " + str(position1))
-
+	
+	#Changes position of second motor
 	if(position >=203 and position <= 213):
 		position2 = position - 200
 		signal1.ChangeDutyCycle(position2)
-		time.sleep(0.7)
+		time.sleep(0.2)
 		signal1.ChangeDutyCycle(0)
 		print("Motor position 2: " + str(position2))
