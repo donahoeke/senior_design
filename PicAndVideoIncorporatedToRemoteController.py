@@ -96,7 +96,7 @@ received message into strings
 
         position = float(n)
         print("position "+ str(position))
-
+        #this is a message for one of the motors 
         if (position >= 103 and position <= 113):
                 position1 = position - 100
                 signal0.ChangeDutyCycle(position1)
@@ -104,17 +104,21 @@ received message into strings
                 signal0.ChangeDutyCycle(0)
                 print("Motor position 1: " + str(position1))
 
+        #this is a message for one the other motor
         if(position >=203 and position <= 213):
                 position2 = position - 200
                 signal1.ChangeDutyCycle(position2)
                 time.sleep(0.7)
                 signal1.ChangeDutyCycle(0)
                 print("Motor position 2: " + str(position2))
-
+        
+        #this is a message for the camera button
         if (position <= 50):
 
                 camera.capture("GladysMatt1.bmp")
                 time.sleep(2)
+                
+                #Matt and Gladys were having errors implimenting the loop and Gladys will try it again once the pi is available.
                 #while True:
                 #        count = 0;
                  #       n = 0;
@@ -129,6 +133,8 @@ received message into strings
 
                           #      else:
                            #             count = count+1
+        
+        #this is a message for the video button
         if (position >= 220):
 
                 camera.start_recording("testvidINTEGRATION.h264")
@@ -136,5 +142,13 @@ received message into strings
                 camera.stop_recording
                 #in the terminal type the following to conver the video:
                 #avconv -r 30 -i exp.h264 -r 30 output12.avi
+                
+                #have to give the following a try to see if we can convert the files in the script and not the terminal:
+                #print("Finshed Recording")
+                #from subprocess import CalledProcessError
+                #command = shlex.split("MP4Box -add {f}.h264 {f}.mp4".format(f=filename))
+                #output = subprocess.check_output(command, stderr=subprocess.STDOUT)
+                #print(output)
+                
                 #to play the video type the following:
                 #omxplayer output12.avi
