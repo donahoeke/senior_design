@@ -1,5 +1,6 @@
-void Record();
-void Camera();
+void record();
+void damera();
+
 #include<SPI.h>
 #include<RF24.h>
 #include<string.h>
@@ -13,20 +14,20 @@ int old_potValue1 = 0;
 int but0 = 5; // Red button-Record button
 int but1 = 6;  // White button-Picture Button
 
-
-//Next three LEDs are for battery monitoring
+//Three LEDs for battery monitoring
 int led0 = 0; // Green LED
 int led1 = 1;  // Yellow LED
 int led2 = 2; // Red LED
 
 
-//Next two LEDs are camera functioning LEDs
+//Two LEDs are camera functioning LEDs
 int led3 = 3; // Red Record LED
 int led4 = 4; //Yellow Picture taken LED
 
 
 int read_but0; //Red button
 int read_but1; //White button
+
 int pot_num; 
 int bright;
 
@@ -34,21 +35,23 @@ void setup(void){
   //Buttons as inputs
   pinMode (but0, INPUT); //Red button
   pinMode (but1, INPUT); //White button
-   //Record and Camera lights as outputs
+  //Record and Camera lights as outputs
   pinMode (led3, OUTPUT); //Red Record LED
   pinMode (led4, OUTPUT);//Yellow Picture taken LED
-  Serial.begin(9600); // begin the serial monitor for debugging purposes
+  //Begin serial monitor for debugging
+  Serial.begin(9600); 
+  //Antenna setup
   radio.begin();//Start the radio
   radio.setPALevel(RF24_PA_MAX);//Setting the Power Amplification Level
   radio.setChannel(0x76);//Setting channel
   radio.openWritingPipe(0xF0F0F0F0E1LL);//Open the sending address
   radio.enableDynamicPayloads();//Enable dynamic payloads
   radio.powerUp();//Power up the radio
-  
 }
 void loop(void) {
-  Record();
-  Camera();
+  record();
+  camera();
+  
   //read the potentiometer values
   int potValue0 = analogRead(A0);
   int potValue1 = analogRead(A1);
@@ -80,10 +83,9 @@ void loop(void) {
   old_potValue0 = potValue0;
   old_potValue1 = potValue1;
 }
-void Record()
+void record()
 {
   read_but0 = digitalRead(but0);
-  read_but1 = digitalRead(but1);
   if(read_but0 == 1)//Pressing the record button
   {
     delay(1000);
@@ -92,8 +94,6 @@ void Record()
     {
     int recordValue1 = 1000 + map(1, 0, 0, 0, 0);
     radio.write(&recordValue1, 1);//Send the message
-    
-    
         digitalWrite(led3, HIGH);
         delay(250);       
         digitalWrite(led3, LOW);        
@@ -111,18 +111,17 @@ void Record()
   }
 }
 
-void Camera()
+void camera()
 {
   read_but1 = digitalRead(but1);//Camera button(white)
   if (1&&read_but1)//Pressing camera button flashes twice
   {
     int cameraValue1 = 300 + map(1, 0, 0, 0,0);
   
-     delay(1200);
+    delay(1200);
     digitalWrite(led4, HIGH);
     delay(1200);
     digitalWrite(led4, LOW);
-    
-    
+      
   }
 }
