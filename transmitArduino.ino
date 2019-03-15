@@ -118,6 +118,7 @@ void camera()
   if (1&&read_but1)//Pressing camera button flashes twice
   {
     int cameraValue1 = 300 + map(1, 0, 0, 0,0);
+     radio.write(&cameraValue1, 1);//Send the message
   
     delay(1200);
     digitalWrite(led4, HIGH);
