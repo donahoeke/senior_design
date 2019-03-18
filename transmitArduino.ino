@@ -63,8 +63,8 @@ void loop(void) {
   int angleValue1 = 200 + map(potValue1, 0, 1020, 3, 12);
   
   //prints for debugging purposes
-  Serial.println("New av0 value: " + (String)potValue0 + "Old av0 value: " + (String)old_potValue0);
-  Serial.println("New av1 value: " + (String)potValue1 + "Old av1 value: " + (String)old_potValue1);
+ // Serial.println("New av0 value: " + (String)potValue0 + "Old av0 value: " + (String)old_potValue0);
+ // Serial.println("New av1 value: " + (String)potValue1 + "Old av1 value: " + (String)old_potValue1);
   
   //Sends a signal over radio if the new potentiometer 0 value is different than the old one (with a small range built in)
   if(potValue0 > old_potValue0 + 5 || potValue0 < old_potValue0-5)
@@ -86,31 +86,43 @@ void loop(void) {
 }
 void record()
 {
+  
   read_but0 = digitalRead(but0);
+  Serial.println((String)read_but0);
   if(read_but0 == 1)//Pressing the record button
   {
-    delay(1000);
+    delay(100);
     read_but0 = digitalRead(but0);
-    while (read_but0 == 0)
+    if (read_but0 == 0)
     {
-    int recordValue1 = 1000 + map(1, 0, 0, 0, 0);
-    radio.write(&recordValue1, 1);//Send the message
+      int recordValue1 = 500;
+      radio.write(&recordValue1, sizeof(recordValue1));//Send the message
+    }
+     
+    while(read_but0 == 0){
         digitalWrite(led3, HIGH);
-        delay(250);       
+        delay(100);       
         digitalWrite(led3, LOW);        
-        delay(250);       
+        delay(100);       
         digitalWrite(led3, HIGH);       
-        delay(250);       
+        delay(100);       
         digitalWrite(led3, LOW);
         read_but0 = digitalRead(but0);
+        Serial.println((String)read_but0);
+        delay(100);
+
+      if (read_but0 == 1)
+      {
+        int recordValue1 = 600;
+        radio.write(&recordValue1, sizeof(recordValue1));//Send the message
+        digitalWrite(led3, LOW);
         delay(500);
-        if(read_but0 == 1)
-        {
-          read_but0 == 2;
-        }
+      }
     }
+    
   }
 }
+
 
 void camera()
 {
@@ -119,10 +131,8 @@ void camera()
   {
     int cameraValue1 = 300 + map(1, 0, 0, 0,0);
      radio.write(&cameraValue1, 1);//Send the message
-  
-    delay(1200);
     digitalWrite(led4, HIGH);
-    delay(1200);
+    delay(400);
     digitalWrite(led4, LOW);
       
   }
