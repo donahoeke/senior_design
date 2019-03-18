@@ -70,14 +70,14 @@ void loop(void) {
   if(potValue0 > old_potValue0 + 5 || potValue0 < old_potValue0-5)
   {
       radio.write(&angleValue0, sizeof(angleValue0));//Send the message
-      delay(1200);
+      delay(300);
   }
   
   //Sends a signal over radio if the new potentiometer 1 value is different than the old one (with a small range built in)
   if(potValue1 > old_potValue1 + 5 || potValue1 < old_potValue1-5)
   {
       radio.write(&angleValue1, sizeof(angleValue1));//Send the message
-      delay(1200);
+      delay(300);
   }
   //float angleValue1 = (13.0/1023.0)*potValue1;
 
