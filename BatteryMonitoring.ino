@@ -3,6 +3,7 @@
 // Print battery voltage
 // to 16x2 LCD via I2C
 // with Voltage Divider (2x 10K resistor)
+
 /*
   Resistors are aligned in series.
   One end goes to Battery - and also to Arduino GND
@@ -12,7 +13,8 @@
 int led0 = 5; // Red LED
 int led1 = 6;  // Yellow LED
 int led2 = 7; // Green LED
-int sampleWire = 0;
+
+//int sampleWire = 0;
 //#include <Wire.h>
 //#include <LCD.h>
 //#include <LiquidCrystal_I2C.h>
@@ -24,14 +26,9 @@ void setup()
   pinMode (led0, OUTPUT); //Red LED
   pinMode (led1, OUTPUT); //Yellow LED
   pinMode (led2, OUTPUT); //Green LED
-  pinMode(A5, INPUT);
-  pinMode(A5, INPUT_PULLUP);
-
   
-  //pinMode(led_pin, OUTPUT);
-  //digitalWrite(led0, HIGH); // Red LED
-  //digitalWrite(led1, HIGH);  // Yellow LED 
-  //digitalWrite(led2, HIGH); // Green LED
+  pinMode(A5, INPUT); // battery voltage input
+  pinMode(A5, INPUT_PULLUP); //pullup resistor enables on input
 }
 
 void loop()
@@ -43,28 +40,32 @@ void loop()
 {
 
   delay(1000);
-  int sensorValue = analogRead(A5); //read the A0 pin value
+  int sensorValue = analogRead(A5); //read the A5 pin value, which is 0-1023
   Serial.println((String)sensorValue);
-  float voltage = sensorValue * (5.0 / 1023.0); //convert the value to a true voltage.
+  float voltage = sensorValue * (5.0 / 1023.0); //convert the value to a true voltage, 0-5 V.
   Serial.println((String)voltage);
  
+ //green LED on
   if (voltage > 4) //set the voltage considered low battery here
   {
     digitalWrite(led2, HIGH);
     digitalWrite(led1, LOW);
     digitalWrite(led0, LOW);
   }
+  
+  //yellow LED on
   if (voltage <= 4 && voltage >= 2.5)
   {
     digitalWrite(led1,HIGH);
     digitalWrite(led2, LOW);
     digitalWrite(led0, LOW);
   }
+  
+  //red LED on
   if (voltage < 2.5)
   {
     digitalWrite(led0,HIGH);
     digitalWrite(led1, LOW);
     digitalWrite(led2, LOW);
   }
-  
 }
