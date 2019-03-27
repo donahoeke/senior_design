@@ -26,6 +26,10 @@ void setup()
   pinMode (led0, OUTPUT); //Red LED
   pinMode (led1, OUTPUT); //Yellow LED
   pinMode (led2, OUTPUT); //Green LED
+
+  digitalWrite(led0, LOW);
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
   
   pinMode(A5, INPUT); // battery voltage input
   pinMode(A5, INPUT_PULLUP); //pullup resistor enables on input
@@ -48,9 +52,9 @@ void loop()
  //green LED on
   if (voltage > 4) //set the voltage considered low battery here
   {
-    digitalWrite(led2, HIGH);
+    digitalWrite(led0, HIGH);
     digitalWrite(led1, LOW);
-    digitalWrite(led0, LOW);
+    digitalWrite(led2, LOW);
   }
   
   //yellow LED on
@@ -64,8 +68,8 @@ void loop()
   //red LED on
   if (voltage < 2.5)
   {
-    digitalWrite(led0,HIGH);
+    digitalWrite(led2,HIGH);
     digitalWrite(led1, LOW);
-    digitalWrite(led2, LOW);
+    digitalWrite(led0, LOW);
   }
 }
