@@ -1,6 +1,6 @@
 //still needs testing by kt
 void record();
-void camera();
+void damera();
 
 #include<SPI.h>
 #include<RF24.h>
@@ -16,10 +16,9 @@ int but0 = 5; // Red button-Record button
 int but1 = 6;  // White button-Picture Button
 
 //Three LEDs for battery monitoring
-int led0 = 0; // Green LED
-int led1 = 1;  // Yellow LED
+int led0 = 7; // Green LED
+int led1 = 8;  // Yellow LED
 int led2 = 2; // Red LED
-
 
 //Two LEDs are camera functioning LEDs
 int led3 = 3; // Red Record LED
@@ -33,14 +32,31 @@ int pot_num;
 int bright;
 
 void setup(void){
+
   //Buttons as inputs
   pinMode (but0, INPUT); //Red button
   pinMode (but1, INPUT); //White button
+  
+  //battery monitoring LEDs
+  pinMode (led0, OUTPUT); //Green LED
+  pinMode (led1, OUTPUT); //Yellow LED
+  pinMode (led2, OUTPUT); //Red LED
+
+  digitalWrite(led0, LOW);
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+
+  //Battery monitoring pin
+  pinMode(A5, INPUT); // battery voltage input
+  pinMode(A5, INPUT_PULLUP); //pullup resistor enables on input
+  
   //Record and Camera lights as outputs
   pinMode (led3, OUTPUT); //Red Record LED
   pinMode (led4, OUTPUT);//Yellow Picture taken LED
+  
   //Begin serial monitor for debugging
   Serial.begin(9600); 
+  
   //Antenna setup
   radio.begin();//Start the radio
   radio.setPALevel(RF24_PA_MAX);//Setting the Power Amplification Level
@@ -52,7 +68,7 @@ void setup(void){
 void loop(void) {
   record();
   camera();
-  
+  batteryMonitor();
   //read the potentiometer values
   int potValue0 = analogRead(A0);
   int potValue1 = analogRead(A1);
@@ -133,7 +149,39 @@ void camera()
      radio.write(&cameraValue1, 1);//Send the message
     digitalWrite(led4, HIGH);
     delay(400);
-    digitalWrite(led4, LOW);
-      
+    digitalWrite(led4, LOW);    
+  }
+}
+
+void batteryMonitor()
+{
+  delay(1000);
+  int sensorValue = analogRead(A5); //read the A5 pin value, which is 0-1023
+  Serial.println((String)sensorValue);
+  float voltage = sensorValue * (5.0 / 1023.0); //convert the value to a true voltage, 0-5 V.
+  Serial.println((String)voltage);
+ 
+ //green LED on
+  if (voltage > 4) //set the voltage considered low battery here
+  {
+    digitalWrite(led0, HIGH);
+    digitalWrite(led1, LOW);
+    digitalWrite(led2, LOW);
+  }
+  
+  //yellow LED on
+  if (voltage <= 4 && voltage >= 2.5)
+  {
+    digitalWrite(led1,HIGH);
+    digitalWrite(led2, LOW);
+    digitalWrite(led0, LOW);
+  }
+  
+  //red LED on
+  if (voltage < 2.5)
+  {
+    digitalWrite(led2,HIGH);
+    digitalWrite(led1, LOW);
+    digitalWrite(led0, LOW);
   }
 }
