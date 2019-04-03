@@ -1,6 +1,5 @@
-//still needs testing by kt
 void record();
-void damera();
+void camera();
 
 #include<SPI.h>
 #include<RF24.h>
